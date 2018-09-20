@@ -16,8 +16,8 @@ public class SimplePlatformController : MonoBehaviour {
     private Animator anim;
     private Rigidbody2D rb2d;
 
-	// Use this for initialization
-	void Awake () {
+    // Use this for initialization
+    void Awake () {
         anim = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         jump = false;
@@ -25,23 +25,23 @@ public class SimplePlatformController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
+        //grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
 
-        if(Input.GetButtonDown("Jump") && grounded)
-        {
-            jump = true;
-        }
+        //if(Input.GetButtonDown("Jump") && grounded)
+        //{
+        //    jump = true;
+        //}
 	}
 
-    private void FixedUpdate()
-    {
-        float h = Input.GetAxis("Horizontal");
+    //private void FixedUpdate()
+    //{
+    //    float h = Input.GetAxis("Horizontal");
 
-        if(h != 0)
-        {
-            MoveSanta(h);
-        }
-    }
+    //    if(h != 0)
+    //    {
+    //        MoveSanta(h);
+    //    }
+    //}
 
     public void Walk()
     {
@@ -86,7 +86,25 @@ public class SimplePlatformController : MonoBehaviour {
         }
     }
 
-    void Flip()
+    public void Appear()
+    {
+        Renderer[] renderers = this.gameObject.GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+        {
+            r.enabled = true;
+        }
+    }
+
+    public void Disappear()
+    {
+        Renderer[] renderers = this.gameObject.GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+        {
+            r.enabled = false;
+        }
+    }
+
+    public void Flip()
     {
         facingRight = !facingRight;
         Vector3 theScale = transform.localScale;

@@ -5,5 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/Level.unity
+    path: Assets/Scenes/EnterBuilding.unity
+    guid: a5318049e3cc0624aa02f709c816b6d8
+  - enabled: 1
+    path: Assets/Scenes/Stairs.unity
+    guid: 4b183896b8cf2ec4bbe1debee135a596
+  - enabled: 1
+    path: Assets/Scenes/Inputs.unity
+    guid: 45cca0f108a2879438b36a6ce9a9eb76
+  m_configObjects: {}

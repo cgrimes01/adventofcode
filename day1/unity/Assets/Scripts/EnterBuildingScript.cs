@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnterBuildingScript : MonoBehaviour {
 
@@ -44,6 +45,8 @@ public class EnterBuildingScript : MonoBehaviour {
         {
             r.enabled = false;
         }
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Stairs");
     }
 	
 	// Update is called once per frame
