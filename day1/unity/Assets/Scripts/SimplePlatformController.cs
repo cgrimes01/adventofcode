@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SimplePlatformController : MonoBehaviour {
 
-    [HideInInspector] public bool facingRight = true;
+    [HideInInspector] public bool facingRight = false;
     [HideInInspector] public bool jump = false;
 
     public float moveForce = 365f;
@@ -20,6 +20,7 @@ public class SimplePlatformController : MonoBehaviour {
 	void Awake () {
         anim = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
+        jump = false;
 	}
 	
 	// Update is called once per frame
@@ -36,28 +37,48 @@ public class SimplePlatformController : MonoBehaviour {
     {
         float h = Input.GetAxis("Horizontal");
 
+        if(h != 0)
+        {
+            MoveSanta(h);
+        }
+    }
+
+    public void Walk()
+    {
+        anim.SetFloat("Speed", 1);
+        rb2d.velocity = new Vector2(5, 0);
+    }
+
+    public void Stop()
+    {
+        anim.SetFloat("Speed", 0);
+        rb2d.velocity = new Vector2(0, 0);
+    }
+
+    public void MoveSanta(float h)
+    {
         anim.SetFloat("Speed", Mathf.Abs(h));
 
-        if(h * rb2d.velocity.x < maxSpeed)
+        if (h * rb2d.velocity.x < maxSpeed)
         {
             rb2d.AddForce(Vector2.right * h * moveForce);
         }
 
-        if(Mathf.Abs(rb2d.velocity.x) > maxSpeed)
+        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
         {
             rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
         }
 
-        if(h > 0 && !facingRight)
+        if (h > 0 && !facingRight)
         {
             Flip();
         }
-        else if(h < 0 && facingRight)
+        else if (h < 0 && facingRight)
         {
             Flip();
         }
 
-        if(jump)
+        if (jump)
         {
             anim.SetTrigger("Jump");
             rb2d.AddForce(new Vector2(0f, jumpForce));
