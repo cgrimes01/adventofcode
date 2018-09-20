@@ -35,7 +35,7 @@ public class EnterBuildingScript : MonoBehaviour {
         yield return new WaitForSeconds(1.5f);
 
         santaScript.Walk();
-        yield return new WaitForSeconds(3.8f);
+        yield return new WaitForSeconds(3.4f);
 
         santaScript.Stop();
         yield return new WaitForSeconds(1.5f);
