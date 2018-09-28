@@ -12,27 +12,29 @@ namespace AdventDay2
         static void Main(string[] args)
         {
             var filePath = Console.ReadLine();
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            var file = new StreamReader(fileStream, Encoding.UTF8, true, 128);
+            var fileText = File.ReadAllLines(filePath);
 
-            string lineOfText;
-            while ((lineOfText = file.ReadLine()) != null)
-            {
+            var presents = 
+                fileText
+                    .Select(line => 
+                        line.Split('x')
+                            .Select(item => {
+                                int value;
+                                bool success = int.TryParse(item, out value);
+                                return success ? value : 0;
+                            })
+                            .OrderBy(item => item)
+                            .ToArray()
+                    )
+                    .Select(line =>
+                        new {wrappingPaper = (3 * line[0] * line[1]) + (2 * line[1] * line[2])
+                                + (2 * line[0] * line[2]),
+                             ribbon = (line[0] * 2) + (line[1] * 2) + (line[0] * line[1] * line[2])})
+                    
+                    ;
 
-                var lineNumbers = 
-                    lineOfText.Split('x')
-                        .Select(item => {
-                            int value;
-                            bool success = int.TryParse(item, out value);
-                            return success ? value : 0;
-                        });
-
-                int product = lineNumbers.Aggregate(1, (x, y) => x * y);
-
-
-                Console.WriteLine("Input: " + lineOfText + "...." + product.ToString());
-            }
-
+            Console.WriteLine("Wrapping Paper:" + presents.Select(present => present.wrappingPaper).Sum());
+            Console.WriteLine("Ribbon:" + presents.Select(present => present.ribbon).Sum());
             Console.ReadKey();
         }
     }
