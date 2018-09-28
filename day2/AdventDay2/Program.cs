@@ -27,8 +27,7 @@ namespace AdventDay2
                             .ToArray()
                     )
                     .Select(line =>
-                        new {wrappingPaper = (3 * line[0] * line[1]) + (2 * line[1] * line[2])
-                                + (2 * line[0] * line[2]),
+                        new {wrappingPaper = (3 * line[0] * line[1]) + (2 * line[1] * line[2]) + (2 * line[0] * line[2]),
                              ribbon = (line[0] * 2) + (line[1] * 2) + (line[0] * line[1] * line[2])})
                     
                     ;
