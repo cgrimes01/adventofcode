@@ -65,33 +65,32 @@ namespace adventday3
 
         public void Fly(char direction)
         {
-            Coordinates currentPosition = GetCurrentPosition();
+            Coordinates newPosition;
 
             switch (direction)
             {
                 case '^':
-                    currentPosition.Move(0, 1);
+                    newPosition = GetCurrentPosition().GetAfterAdjustment(0, 1);
                     break;
                 case 'v':
-                    currentPosition.Move(0, -1);
+                    newPosition = GetCurrentPosition().GetAfterAdjustment(0, -1);
                     break;
                 case '>':
-                    currentPosition.Move(1, 0);
+                    newPosition = GetCurrentPosition().GetAfterAdjustment(1, 0);
                     break;
                 case '<':
-                    currentPosition.Move(-1, 0);
+                    newPosition = GetCurrentPosition().GetAfterAdjustment(-1, 0);
                     break;
                 default:
-                    currentPosition.Move(0, 0);
+                    newPosition = GetCurrentPosition().GetAfterAdjustment(0, 0);
                     return;
             }
 
-            FlightHistory.Add(currentPosition);
+            FlightHistory.Add(newPosition);
         }
 
         private Coordinates GetCurrentPosition() {
-            var coordinates = FlightHistory[FlightHistory.Count - 1];
-            return new Coordinates(coordinates.X, coordinates.Y);
+            return FlightHistory[FlightHistory.Count - 1];
         }
 
     }
@@ -106,10 +105,9 @@ namespace adventday3
             this.Y = y;
         }
 
-        public void Move(int xChange, int yChange)
+        public Coordinates GetAfterAdjustment(int xChange, int yChange)
         {
-            X = X + xChange;
-            Y = Y + yChange;
+            return new Coordinates(X + xChange, Y + yChange);
         }
 
         public bool Equals(Coordinates other)
