@@ -46,35 +46,35 @@ namespace day5.Tests
         [Test]
         public void IsANiceStringExample1()
         {
-            var result = NaughtyOrNice.IsNice("ugknbfddgicrmopn");
+            var result = NaughtyOrNice.IsNiceMethdo1("ugknbfddgicrmopn");
             Assert.IsTrue(result);
         }
 
         [Test]
         public void IsANiceStringExample2()
         {
-            var result = NaughtyOrNice.IsNice("aaa");
+            var result = NaughtyOrNice.IsNiceMethdo1("aaa");
             Assert.IsTrue(result);
         }
 
         [Test]
         public void IsANiceStringExample3()
         {
-            var result = NaughtyOrNice.IsNice("jchzalrnumimnmhp");
+            var result = NaughtyOrNice.IsNiceMethdo1("jchzalrnumimnmhp");
             Assert.IsFalse(result);
         }
 
         [Test]
         public void IsANiceStringExample4()
         {
-            var result = NaughtyOrNice.IsNice("haegwjzuvuyypxyu");
+            var result = NaughtyOrNice.IsNiceMethdo1("haegwjzuvuyypxyu");
             Assert.IsFalse(result);
         }
 
         [Test]
         public void IsANiceStringExample5()
         {
-            var result = NaughtyOrNice.IsNice("dvszwmarrgswjxmb");
+            var result = NaughtyOrNice.IsNiceMethdo1("dvszwmarrgswjxmb");
             Assert.IsFalse(result);
         }
     }
