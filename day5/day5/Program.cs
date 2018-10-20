@@ -20,7 +20,7 @@ namespace day5
     {
         public static bool IsNice(string input)
         {
-            string nicePattern = "(\\w*[aeiou]\\w*){3,}";
+            string nicePattern = "(?=\\w*(\\w)\\1{1,}\\w*)(\\w*[aeiou]\\w*){3,}";
 
             return Regex.IsMatch(input, nicePattern);
         }
@@ -34,9 +34,9 @@ namespace day5
 
         public static bool ContainsADoubleLetter(string input)
         {
-            string vowelsPattern = "(\\w)\\1{1,}";
+            string doublePattern = "\\w*(\\w)\\1{1,}\\w*";
 
-            return Regex.IsMatch(input, vowelsPattern);
+            return Regex.IsMatch(input, doublePattern);
         }
     }
 }
