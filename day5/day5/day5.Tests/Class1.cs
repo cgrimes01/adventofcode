@@ -29,6 +29,20 @@ namespace day5.Tests
             var result = NaughtyOrNice.ContainsADoubleLetter("ugabeka");
             Assert.IsFalse(result);
         }
+
+        [Test]
+        public void StringContainsBannedPattern()
+        {
+            var result = NaughtyOrNice.DoesNotContainBannedCombinations("abukeor");
+            Assert.IsFalse(result);
+        }
+        [Test]
+        public void StringNotContainsBannedPattern()
+        {
+            var result = NaughtyOrNice.DoesNotContainBannedCombinations("ugabeka");
+            Assert.IsFalse(result);
+        }
+
         [Test]
         public void IsANiceStringExample1()
         {

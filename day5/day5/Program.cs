@@ -21,8 +21,16 @@ namespace day5
         public static bool IsNice(string input)
         {
             string nicePattern = "(?=\\w*(\\w)\\1{1,}\\w*)(\\w*[aeiou]\\w*){3,}";
+            string bannedPattern = "^((?!ab)(?!cd)(?!pq)(?!xy).)*$";
 
-            return Regex.IsMatch(input, nicePattern);
+            return Regex.IsMatch(input, nicePattern) && Regex.IsMatch(input, bannedPattern);
+        }
+
+        public static bool DoesNotContainBannedCombinations(string input)
+        {
+            string bannedPattern = "^((?!ab)(?!cd)(?!pq)(?!xy).)*$";
+
+            return Regex.IsMatch(input, bannedPattern);
         }
 
         public static bool Contains3OrMoreVowels(string input)
