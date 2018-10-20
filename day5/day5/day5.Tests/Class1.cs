@@ -46,35 +46,67 @@ namespace day5.Tests
         [Test]
         public void IsANiceStringExample1()
         {
-            var result = NaughtyOrNice.IsNiceMethdo1("ugknbfddgicrmopn");
+            var result = NaughtyOrNice.IsNiceMethod1("ugknbfddgicrmopn");
             Assert.IsTrue(result);
         }
 
         [Test]
         public void IsANiceStringExample2()
         {
-            var result = NaughtyOrNice.IsNiceMethdo1("aaa");
+            var result = NaughtyOrNice.IsNiceMethod1("aaa");
             Assert.IsTrue(result);
         }
 
         [Test]
         public void IsANiceStringExample3()
         {
-            var result = NaughtyOrNice.IsNiceMethdo1("jchzalrnumimnmhp");
+            var result = NaughtyOrNice.IsNiceMethod1("jchzalrnumimnmhp");
             Assert.IsFalse(result);
         }
 
         [Test]
         public void IsANiceStringExample4()
         {
-            var result = NaughtyOrNice.IsNiceMethdo1("haegwjzuvuyypxyu");
+            var result = NaughtyOrNice.IsNiceMethod1("haegwjzuvuyypxyu");
             Assert.IsFalse(result);
         }
 
         [Test]
         public void IsANiceStringExample5()
         {
-            var result = NaughtyOrNice.IsNiceMethdo1("dvszwmarrgswjxmb");
+            var result = NaughtyOrNice.IsNiceMethod1("dvszwmarrgswjxmb");
+            Assert.IsFalse(result);
+        }
+    }
+
+    [TestFixture]
+    public class Part2Tests
+    {
+        [Test]
+        public void IsANiceStringExample1()
+        {
+            var result = NaughtyOrNice.IsNiceMethod2("qjhvhtzxzqqjkmpb");
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void IsANiceStringExample2()
+        {
+            var result = NaughtyOrNice.IsNiceMethod2("xxyxx");
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void IsANiceStringExample3()
+        {
+            var result = NaughtyOrNice.IsNiceMethod2("uurcxstgmygtbstg");
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void IsANiceStringExample4()
+        {
+            var result = NaughtyOrNice.IsNiceMethod2("ieodomkazucvgmuy");
             Assert.IsFalse(result);
         }
     }

@@ -17,8 +17,8 @@ namespace day5
             int niceStringsMethod2 = 0;
             foreach (string line in lines)
             {
-                if(NaughtyOrNice.IsNiceMethdo1(line)) niceStringsMethod1++;
-                if (NaughtyOrNice.IsNiceMethdo2(line)) niceStringsMethod2++;
+                if(NaughtyOrNice.IsNiceMethod1(line)) niceStringsMethod1++;
+                if(NaughtyOrNice.IsNiceMethod2(line)) niceStringsMethod2++;
             }
             Console.WriteLine("Method 1: " + niceStringsMethod1);
             Console.WriteLine("Method 2: " + niceStringsMethod2);
@@ -28,7 +28,7 @@ namespace day5
 
     public class NaughtyOrNice
     {
-        public static bool IsNiceMethdo1(string input)
+        public static bool IsNiceMethod1(string input)
         {
             string nicePattern = @"(?=\w*(\w)\1{1,}\w*)(\w*[aeiou]\w*){3,}";
             string bannedPattern = @"^((?!ab)(?!cd)(?!pq)(?!xy).)*$";
@@ -36,12 +36,12 @@ namespace day5
             return Regex.IsMatch(input, nicePattern) && Regex.IsMatch(input, bannedPattern);
         }
 
-        public static bool IsNiceMethdo2(string input)
+        public static bool IsNiceMethod2(string input)
         {
-            string nicePattern = @"(?=\w*(\w)\1{1,}\w*)(\w*[aeiou]\w*){3,}";
-            string bannedPattern = @"^((?!ab)(?!cd)(?!pq)(?!xy).)*$";
+            string pairOfTwo = @"(\w\w)\w*\1{1,}";
+            string oneLetterSandwich = @"(\w)\w{1}\1";
 
-            return Regex.IsMatch(input, nicePattern) && Regex.IsMatch(input, bannedPattern);
+            return Regex.IsMatch(input, pairOfTwo) && Regex.IsMatch(input, oneLetterSandwich);
         }
 
         public static bool DoesNotContainBannedCombinations(string input)
