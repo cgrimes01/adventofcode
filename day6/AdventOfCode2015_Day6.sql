@@ -6,12 +6,12 @@ BEGIN
 END
 
 --Create the Day6.Part1Grid table
-DROP TABLE IF EXISTS Day6.Part1Grid;
-CREATE TABLE Day6.Part1Grid(
+DROP TABLE IF EXISTS Day6.LightGrid;
+CREATE TABLE Day6.LightGrid(
 	rowPosition		INT NOT NULL,
 	columnPosition	INT NOT NULL,
-	lightState		BIT DEFAULT(0),
-	CONSTRAINT PK_Part1Grid PRIMARY KEY (rowPosition, columnPosition)
+	lightState		TINYINT DEFAULT(0),
+	CONSTRAINT PK_LightGrid PRIMARY KEY (rowPosition, columnPosition)
 );
 GO
 
@@ -27,7 +27,7 @@ numbers(n) AS (
 	SELECT ROW_NUMBER() OVER(ORDER BY t2.n)
 	FROM t2 
 	CROSS JOIN (SELECT TOP 10 1 n FROM t2) AS a)
-INSERT INTO Day6.Part1Grid(rowPosition, columnPosition)
+INSERT INTO Day6.LightGrid(rowPosition, columnPosition)
 SELECT 
 	n1.n AS rowPosition
 ,	n2.n AS columnPosition
@@ -35,8 +35,8 @@ FROM numbers n1
 CROSS JOIN numbers n2;
 GO
 
---Create proc which given an instruction line will make the require adjustments to the lights
-CREATE OR ALTER PROC Day6.LightsInstruction(@instruction VARCHAR(100)) 
+--Create proc which given an instruction line will make the require adjustments to the lights for part1
+CREATE OR ALTER PROC Day6.LightsInstructionPart1(@instruction VARCHAR(100)) 
 AS
 BEGIN
 	DECLARE @action TINYINT
@@ -67,10 +67,10 @@ BEGIN
 	SET @endCol = TRY_PARSE(RIGHT(@tempinstruction, LEN(@tempinstruction) - CHARINDEX(',', @tempinstruction)) AS INT);
 
 	--Now update the grid to reflect the changes in the instruction
-	UPDATE Day6.Part1Grid
+	UPDATE Day6.LightGrid
 	SET lightState =
 		CASE @action
-			WHEN 2 THEN 1 ^ lightState
+			WHEN 2 THEN 1 ^ CAST(lightState AS BIT)
 			ELSE @action
 		END
 	WHERE rowPosition BETWEEN @startRow AND @endRow
@@ -113,7 +113,7 @@ OPEN instruction_cursor
 FETCH NEXT FROM instruction_cursor INTO @CurrentInstruction
 WHILE @@FETCH_STATUS = 0
 BEGIN
-	EXEC Day6.LightsInstruction @CurrentInstruction;
+	EXEC Day6.LightsInstructionPart1 @CurrentInstruction;
 
 	FETCH NEXT FROM instruction_cursor INTO @CurrentInstruction;
 END
@@ -123,5 +123,5 @@ DEALLOCATE instruction_cursor;
 
 --Get the count of the lights which are turned on
 SELECT COUNT(*)
-FROM Day6.Part1Grid
+FROM Day6.LightGrid
 WHERE lightState = 1;
