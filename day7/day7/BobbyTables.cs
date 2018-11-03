@@ -15,11 +15,13 @@ namespace day7
         {
             string line;
 
-            StreamReader file = new StreamReader(filePointer);
-            while ((line = file.ReadLine()) != null)
+            using(StreamReader file = new StreamReader(filePointer))
             {
-                computationList.Add(new Computation(line));
-            }
+                while ((line = file.ReadLine()) != null)
+                {
+                    computationList.Add(new Computation(line));
+                }
+            } 
         }
 
         public UInt16 CalculateValue(string value) {
