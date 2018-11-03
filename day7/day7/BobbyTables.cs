@@ -29,7 +29,10 @@ namespace day7
                 return number;
             }
 
-            string calculation = computationList.Find(x => x.OutputWire == value.Trim()).Calculation;
+            UInt16 result;
+
+            Computation computation = computationList.Find(x => x.OutputWire == value.Trim());
+            string calculation = computation.Calculation;
             string[] split;
             string operation = "";
 
@@ -37,38 +40,38 @@ namespace day7
             {
                 operation = "AND";
                 split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                return (UInt16)(CalculateValue(split[0]) & CalculateValue(split[1]));
+                result = (UInt16)(CalculateValue(split[0]) & CalculateValue(split[1]));
+                
             }
             else if(calculation.IndexOf("OR") != -1) {
                 operation = "OR";
                 split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                return (UInt16)(CalculateValue(split[0]) | CalculateValue(split[1]));
+                result = (UInt16)(CalculateValue(split[0]) | CalculateValue(split[1]));
             }
             else if (calculation.IndexOf("NOT") != -1)
             {
                 operation = "NOT";
                 split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                return (UInt16)(~ CalculateValue(split[1]));
+                result = (UInt16)(~CalculateValue(split[1]));
             }
             else if (calculation.IndexOf("LSHIFT") != -1)
             {
                 operation = "LSHIFT";
                 split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                return (UInt16)(CalculateValue(split[0]) << Int16.Parse(split[1]));
+                result = (UInt16)(CalculateValue(split[0]) << Int16.Parse(split[1]));
             }
             else if (calculation.IndexOf("RSHIFT") != -1)
             {
                 operation = "RSHIFT";
                 split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                return (UInt16)(CalculateValue(split[0]) >> Int16.Parse(split[1]));
-            }
-
-            if(operation == "")
+                result = (UInt16)(CalculateValue(split[0]) >> Int16.Parse(split[1]));
+            } else
             {
-                CalculateValue(calculation);
+                result = CalculateValue(calculation);
             }
 
-            return (UInt16)0;
+            computation.Calculation = result.ToString();
+            return result;
         }
 }
 
