@@ -23,6 +23,12 @@ namespace day7
         }
 
         public UInt16 CalculateValue(string value) {
+            UInt16 number;
+            if (UInt16.TryParse(value, out number))
+            {
+                return number;
+            }
+
             string calculation = computationList.Find(x => x.OutputWire == value.Trim()).Calculation;
             string[] split;
             string operation = "";
@@ -59,14 +65,7 @@ namespace day7
 
             if(operation == "")
             {
-                UInt16 number;
-                if(UInt16.TryParse(calculation, out number))
-                {
-                    return number;
-                } else
-                {
-                    CalculateValue(calculation);
-                }
+                CalculateValue(calculation);
             }
 
             return (UInt16)0;
