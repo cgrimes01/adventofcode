@@ -11,7 +11,7 @@ namespace day7
         static void Main(string[] args)
         {
             BobbyTables program = new BobbyTables(@"D:\AdventOfCode\adventofcode2015\day7\day7input.txt");
-            Console.WriteLine(program.CalculateValue("a"));
+            //Console.WriteLine(program.CalculateValue("d"));
             Console.ReadLine();
         }
     }
