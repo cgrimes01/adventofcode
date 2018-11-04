@@ -34,48 +34,40 @@ namespace day7
             UInt16 result;
 
             Computation computation = computationList.Find(x => x.OutputWire == value.Trim());
-            string calculation = computation.Calculation;
-            string[] split;
-            string operation = "";
+            string[] calculationParts = computation.Calculation.Split(' ');
 
-            if (calculation.IndexOf("AND") != -1)
+            if(calculationParts.Length == 1)
             {
-                operation = "AND";
-                split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                result = (UInt16)(CalculateValue(split[0]) & CalculateValue(split[1]));
-                
+                result = CalculateValue(computation.Calculation);
             }
-            else if(calculation.IndexOf("OR") != -1) {
-                operation = "OR";
-                split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                result = (UInt16)(CalculateValue(split[0]) | CalculateValue(split[1]));
+            else if (calculationParts[0] == "NOT")
+            {
+                result = (UInt16)(~CalculateValue(calculationParts[1]));
             }
-            else if (calculation.IndexOf("NOT") != -1)
+            else if (calculationParts[1] == "AND")
             {
-                operation = "NOT";
-                split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                result = (UInt16)(~CalculateValue(split[1]));
+                result = (UInt16)(CalculateValue(calculationParts[0]) & CalculateValue(calculationParts[2]));
             }
-            else if (calculation.IndexOf("LSHIFT") != -1)
-            {
-                operation = "LSHIFT";
-                split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                result = (UInt16)(CalculateValue(split[0]) << Int16.Parse(split[1]));
+            else if(calculationParts[1] == "OR") {
+                result = (UInt16)(CalculateValue(calculationParts[0]) | CalculateValue(calculationParts[2]));
             }
-            else if (calculation.IndexOf("RSHIFT") != -1)
+            else if (calculationParts[1] == "LSHIFT")
             {
-                operation = "RSHIFT";
-                split = calculation.Split(new[] { operation }, StringSplitOptions.None);
-                result = (UInt16)(CalculateValue(split[0]) >> Int16.Parse(split[1]));
-            } else
+                result = (UInt16)(CalculateValue(calculationParts[0]) << Int16.Parse(calculationParts[2]));
+            }
+            else if (calculationParts[1] == "RSHIFT")
             {
-                result = CalculateValue(calculation);
+                result = (UInt16)(CalculateValue(calculationParts[0]) >> Int16.Parse(calculationParts[2]));
+            }
+            else
+            {
+                throw new InvalidDataException($"The calculation [{computation.Calculation}] is not valid for variable {value}");
             }
 
             computation.Calculation = result.ToString();
             return result;
         }
-}
+    }
 
     public class Computation
     {
