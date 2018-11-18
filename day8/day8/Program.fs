@@ -12,20 +12,33 @@ let removeChar a (list:string) =
 let replaceWithSingle pattern input = 
     Regex.Replace(input, pattern, "_")
 
-let cleanUpString input =
+let part1CleanUpString input =
     replaceWithSingle """(\\\\)""" input
     |> replaceWithSingle """(\\")"""
     |> replaceWithSingle """(\\x\w\w)"""
     |> removeChar '"'
 
-let fileInput = String.Concat (File.ReadAllLines @"D:\AdventOfCode\adventofcode2015\day8\day8\day8input.txt")
-let charactersOfCode = fileInput.Length
-let stringLength = (cleanUpString fileInput).Length
-let solution = charactersOfCode - stringLength
+let part2Encode input =
+    Regex.Replace(input, """\\""", """\\""")
+    |> fun input -> Regex.Replace(input, "\"", "\\\"")
+
+let part2 (input:string[]) = 
+    input
+    |> Seq.map (fun x -> ("\"" + (part2Encode x) + "\""))
+    |> String.Concat
+
+let outputResults (codeLength:int) (stringLength:int) (solution:int) = 
+    printfn "Characters of code =  %i\nString length =  %i\nSolution = %i" codeLength stringLength solution
+
+let fileInputPart1 = String.Concat (File.ReadAllLines @"D:\AdventOfCode\adventofcode2015\day8\day8\day8input.txt")
+let fileInputPart2 = File.ReadAllLines @"D:\AdventOfCode\adventofcode2015\day8\day8\day8input.txt"
 
 [<EntryPoint>]
 let main argv =
-    printfn "Characters of code =  %i\nString length =  %i\nSolution = %i" charactersOfCode stringLength solution
+    printfn "PART 1:"
+    outputResults fileInputPart1.Length (part1CleanUpString fileInputPart1).Length (fileInputPart1.Length - (part1CleanUpString fileInputPart1).Length)
+    printfn "\nPART 2:"
+    outputResults (String.Concat fileInputPart2).Length (part2 fileInputPart2).Length ((part2 fileInputPart2).Length  - (String.Concat fileInputPart2).Length)
     0 // return an integer exit code
 
 
