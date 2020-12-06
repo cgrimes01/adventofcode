@@ -13,7 +13,8 @@ fn main() {
             }
         }
     }
-    println!("{}", get_2020_product(&numbers));
+    println!("2020 sum with 2 numbers = {}", get_2020_product_2numbers(&numbers));
+    println!("2020 sum with 3 numbers = {}", get_2020_product_3numbers(&numbers));
 }
 
 // The output is wrapped in a Result to allow matching on errors
@@ -24,11 +25,24 @@ where P: AsRef<Path>, {
     Ok(io::BufReader::new(file).lines())
 }
 
-fn get_2020_product(numbers: &Vec<i32>) -> i32 {
+fn get_2020_product_2numbers(numbers: &Vec<i32>) -> i32 {
     for (i, outerval) in numbers.iter().enumerate() {
         for (y, innerval) in numbers.iter().enumerate() {
             if i != y && outerval + innerval == 2020 {
                 return innerval * outerval
+            }
+        }
+    }
+    0
+}
+
+fn get_2020_product_3numbers(numbers: &Vec<i32>) -> i32 {
+    for (i, val1) in numbers.iter().enumerate() {
+        for (y, val2) in numbers.iter().enumerate() {
+            for (z, val3) in numbers.iter().enumerate() {
+                if i != y && i!= z && y!= z && val1 + val2 + val3 == 2020 {
+                    return val1 * val2 * val3
+                }
             }
         }
     }
