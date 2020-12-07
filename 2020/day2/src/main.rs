@@ -43,7 +43,8 @@ fn main() {
             }
         }
     }
-    println!("Valid Passwords = {}", password_checks(passwords));
+    println!("Valid Passwords for Part1 = {}", password_checks_part1(&passwords));
+    println!("Valid Passwords for Part2 = {}", password_checks_part2(&passwords));
 }
 
 // The output is wrapped in a Result to allow matching on errors
@@ -54,11 +55,25 @@ where P: AsRef<Path>, {
     Ok(io::BufReader::new(file).lines())
 }
 
-fn password_checks(passwords : Vec<PasswordLine>) -> i32 {
+fn password_checks_part1(passwords : &Vec<PasswordLine>) -> i32 {
     let mut valid_passwords : i32 = 0;
     for (_, password_line) in passwords.iter().enumerate() {
         let letter_occurrences = password_line.password.chars().filter(|letter| *letter == password_line.letter).count();
         if letter_occurrences >= password_line.minimum && letter_occurrences <= password_line.maximum {
+            valid_passwords = valid_passwords + 1;
+        }
+    }
+    valid_passwords
+}
+
+fn password_checks_part2(passwords : &Vec<PasswordLine>) -> i32 {
+    let mut valid_passwords : i32 = 0;
+    for (_, password_line) in passwords.iter().enumerate() {
+        
+        let first_letter = password_line.password[(password_line.minimum - 1)..].chars().next().unwrap();
+        let second_letter = password_line.password[(password_line.maximum - 1)..].chars().next().unwrap();
+
+        if (first_letter == password_line.letter) ^ (second_letter == password_line.letter) {
             valid_passwords = valid_passwords + 1;
         }
     }
