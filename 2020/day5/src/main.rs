@@ -1,5 +1,19 @@
+use std::fs;
+
 fn main() {
-    println!("Hello, world!");
+    let input = fs::read_to_string("input.txt").unwrap();
+    println!("Highest seat id = {}", part1(&input));
+}
+
+fn part1(input : &String) -> u32 {
+    let mut max_seat_id = 0;
+    for line in input.lines() {
+        let position = get_position(line, 128, 8);
+        if position.seat_id > max_seat_id {
+            max_seat_id = position.seat_id;
+        }
+    }
+    max_seat_id
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
