@@ -2,6 +2,13 @@ fn main() {
     println!("Hello, world!");
 }
 
+#[derive(Debug, PartialEq, Copy, Clone)]
+struct Position {
+    row : u32,
+    column : u32,
+    seat_id : u32,
+}
+
 #[derive(Debug, Copy, Clone)]
 struct Bounds {
     upper : u32,
@@ -41,6 +48,16 @@ fn get_col(col_code : &str, cols : u32) -> u32 {
         } 
     }
     bound.upper
+}
+
+fn get_position(input: &str, rows: u32, cols: u32) -> Position {
+    let row_code = &input[0..7];
+    let col_code = &input[7..10];
+    let row = get_row(row_code, rows);
+    let col = get_col(col_code, cols);
+    let seat_id = (row * 8) + col;
+    let position = Position { row: row, column: col, seat_id: seat_id};
+    position    
 }
 
 #[cfg(test)]
@@ -85,5 +102,38 @@ mod col_tests {
     fn col_3() {
         let input = "RLL";  
         assert_eq!(get_col(input, 8), 4);
+    }
+}
+
+#[cfg(test)]
+mod position_tests {
+    use super::*;
+    #[test]
+    fn position_1() {
+        let input = "FBFBBFFRLR";
+        let expected = Position { row: 44, column: 5, seat_id: 357 };
+        let result = get_position(input, 128, 8);
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn position_2() {
+        let input = "BFFFBBFRRR";
+        let expected = Position { row: 70, column: 7, seat_id: 567 };
+        let result = get_position(input, 128, 8);
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn position_3() {
+        let input = "FFFBBBFRRR";
+        let expected = Position { row: 14, column: 7, seat_id: 119 };
+        let result = get_position(input, 128, 8);
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn position_4() {
+        let input = "BBFFBBFRLL";
+        let expected = Position { row: 102, column: 4, seat_id: 820 };
+        let result = get_position(input, 128, 8);
+        assert_eq!(result, expected);
     }
 }
