@@ -27,8 +27,18 @@ fn get_row(row_code : &str, rows : u32) -> u32 {
             'B' => bound.select_upper_half(),
             _ => {}
         } 
-        dbg!(calc);
-        dbg!(bound);
+    }
+    bound.upper
+}
+
+fn get_col(col_code : &str, cols : u32) -> u32 {
+    let mut bound = Bounds { upper: cols - 1, lower: 0 };
+    for calc in col_code.chars() {
+        match calc {
+            'L' => bound.select_lower_half(),
+            'R' => bound.select_upper_half(),
+            _ => {}
+        } 
     }
     bound.upper
 }
@@ -55,5 +65,25 @@ mod row_tests {
     fn row_4() {
         let input = "BBFFBBF";  
         assert_eq!(get_row(input, 128), 102);
+    }
+}
+
+#[cfg(test)]
+mod col_tests {
+    use super::*;
+    #[test]
+    fn col_1() {
+        let input = "RLR";  
+        assert_eq!(get_col(input, 8), 5);
+    }
+    #[test]
+    fn col_2() {
+        let input = "RRR";  
+        assert_eq!(get_col(input, 8), 7);
+    }
+    #[test]
+    fn col_3() {
+        let input = "RLL";  
+        assert_eq!(get_col(input, 8), 4);
     }
 }
