@@ -1,8 +1,10 @@
 use std::fs;
+use std::collections::HashMap;
 
 fn main() {
     let input = fs::read_to_string("input.txt").unwrap();
     println!("Highest seat id = {}", part1(&input));
+    println!("Your seat = {}", part2(&input));
 }
 
 fn part1(input : &String) -> u32 {
@@ -14,6 +16,37 @@ fn part1(input : &String) -> u32 {
         }
     }
     max_seat_id
+}
+
+fn part2(input : &String) -> u32 {
+    let mut positions = HashMap::new();
+    for line in input.lines() {
+        let position = get_position(line, 128, 8);
+        positions.insert(position.seat_id, position);
+    }
+    let max_seat_id : u32 = (127 * 8) + 7; 
+    let mut missing_positions = HashMap::new();
+    let mut my_seat = 0;
+    for x in 0..(max_seat_id + 1) {
+        match positions.get(&x) {
+            None => {
+                if x != 0 {
+                    match positions.get(&(x - 1)) {
+                        None => {},
+                        Some(_) => {
+                            match positions.get(&(x + 1)) {
+                                None => {},
+                                Some(_) => { my_seat = x; } 
+                            }
+                        } 
+                    }
+                    missing_positions.insert(x, x);
+                }
+            },
+            Some(_) => {} 
+        }
+    }
+    my_seat
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -97,6 +130,11 @@ mod row_tests {
         let input = "BBFFBBF";  
         assert_eq!(get_row(input, 128), 102);
     }
+    #[test]
+    fn row_5() {
+        let input = "BBBBBBB";  
+        assert_eq!(get_row(input, 128), 127);
+    }
 }
 
 #[cfg(test)]
@@ -147,6 +185,13 @@ mod position_tests {
     fn position_4() {
         let input = "BBFFBBFRLL";
         let expected = Position { row: 102, column: 4, seat_id: 820 };
+        let result = get_position(input, 128, 8);
+        assert_eq!(result, expected);
+    }
+    #[test]
+    fn position_5() {
+        let input = "FFFFFFFRLL";
+        let expected = Position { row: 0, column: 4, seat_id: 4 };
         let result = get_position(input, 128, 8);
         assert_eq!(result, expected);
     }
