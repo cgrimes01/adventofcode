@@ -25,7 +25,6 @@ fn part2(input : &String) -> u32 {
         positions.insert(position.seat_id, position);
     }
     let max_seat_id : u32 = (127 * 8) + 7; 
-    let mut missing_positions = HashMap::new();
     let mut my_seat = 0;
     for x in 0..(max_seat_id + 1) {
         match positions.get(&x) {
@@ -40,7 +39,6 @@ fn part2(input : &String) -> u32 {
                             }
                         } 
                     }
-                    missing_positions.insert(x, x);
                 }
             },
             Some(_) => {} 
