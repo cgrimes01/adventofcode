@@ -29,10 +29,10 @@ fn process_bag_line(input : &str) -> Bag {
     for word in input.split(" ") {
         match state {
             "colour" => {
-                if word == "bags" || word == "contains" {
-                    state = "contains";
-                } else {
-                    bag.colour = bag.colour + " " + word;
+                match word {
+                    "bags" => {},
+                    "contain" => state = "contains",
+                    _ => bag.colour = (bag.colour + " " + word).trim().to_string(),
                 }
             },
             "contains" => {
@@ -43,7 +43,7 @@ fn process_bag_line(input : &str) -> Bag {
                     Err(_) => {
                         if word.contains("bag") {
                             if contained_count != 0 {
-                                bag.contents.insert(contained_colour.to_string(), contained_count);
+                                bag.contents.insert(contained_colour.trim().to_string(), contained_count);
                             }
                             contained_colour = "".to_string();
                             contained_count = 0;
