@@ -3,8 +3,8 @@ use std::collections::HashMap;
 
 fn main() {
     let input = fs::read_to_string("input.txt").unwrap();
-    println!("Sum of distinct counts = {}", part1(&input, "shiny gold".to_string()));
-    // println!("Sum of all counts = {}", part2(&input));
+    println!("Part 1 = {}", part1(&input, "shiny gold".to_string()));
+    println!("Part 2 = {}", part2(&input, "shiny gold".to_string()));
 }
 
 #[derive(Debug)]
@@ -20,6 +20,15 @@ fn part1(input : &String, colour: String) -> usize {
     }
     let containingbags = get_bags_containing(colour, &bags);
     containingbags.len()
+}
+
+fn part2(input : &String, colour: String) -> usize {
+    let mut bags: Vec<Bag> = Vec::new();
+    for line in input.lines() {
+        bags = process_bag_line(&line, bags);
+    }
+    let total = get_contained_bags(colour, &bags);
+    total
 }
 
 fn append_word(current : &mut String, append : &str) {
@@ -43,6 +52,20 @@ fn get_bags_containing(colour : String, bags : &Vec<Bag>) -> HashMap<String, Str
         }
     }
     containingbags
+}
+
+fn get_contained_bags(colour : String, bags : &Vec<Bag>) -> usize {
+    let mut total = 0;
+
+    for bag in bags {
+        if &bag.colour == &colour {
+            for (contained_colour, count) in &bag.contents {
+                total = total + count;
+                total = total + (get_contained_bags(contained_colour.clone(), &bags) * count);
+            }
+        }
+    }
+    total
 }
 
 fn process_bag_line(input : &str, mut bags: Vec<Bag>) -> Vec<Bag> {
@@ -91,8 +114,13 @@ fn process_bag_line(input : &str, mut bags: Vec<Bag>) -> Vec<Bag> {
 mod part1_tests {
     use super::*;
     #[test]
-    fn group_1() {
+    fn part_1() {
         let input = "light red bags contain 1 bright white bag, 2 muted yellow bags.\ndark orange bags contain 3 bright white bags, 4 muted yellow bags.\nbright white bags contain 1 shiny gold bag.\nmuted yellow bags contain 2 shiny gold bags, 9 faded blue bags.\nshiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.\ndark olive bags contain 3 faded blue bags, 4 dotted black bags.\nvibrant plum bags contain 5 faded blue bags, 6 dotted black bags.\nfaded blue bags contain no other bags.\ndotted black bags contain no other bags.".to_string();  
         assert_eq!(part1( &input, "shiny gold".to_string()), 4);
+    }
+    #[test]
+    fn part_2() {
+        let input = "shiny gold bags contain 2 dark red bags.\ndark red bags contain 2 dark orange bags.\ndark orange bags contain 2 dark yellow bags.\ndark yellow bags contain 2 dark green bags.\ndark green bags contain 2 dark blue bags.\ndark blue bags contain 2 dark violet bags.\ndark violet bags contain no other bags.".to_string();  
+        assert_eq!(part2( &input, "shiny gold".to_string()), 126);
     }
 }
