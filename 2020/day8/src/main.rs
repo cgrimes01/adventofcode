@@ -5,7 +5,7 @@ fn main() {
     let input = fs::read_to_string("input.txt").unwrap();
     let instructions = get_instructions(&input);
     println!("Part 1 = {}", part1(&instructions));
-    println!("Part 2 = {}", part2(&instructions));
+    //println!("Part 2 = {}", part2(&instructions));
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -15,10 +15,33 @@ enum InstructionType {
     Jmp,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 struct Instruction {
     instruction_type: InstructionType,
     value: i32,
+}
+
+#[derive(Debug, Copy, Clone)]
+struct State {
+    acc: i32,
+    current_instruction: usize,
+}
+
+impl State {
+    fn action_instruction(&mut self, instruction : Instruction) {
+        match instruction.instruction_type {
+            InstructionType::Nop => {
+                self.current_instruction = self.current_instruction + 1;
+            },
+            InstructionType::Acc => {
+                self.acc = self.acc + instruction.value;
+                self.current_instruction = self.current_instruction + 1;
+            },
+            InstructionType::Jmp => {
+                self.current_instruction = ((self.current_instruction as i32) + instruction.value) as usize;
+            },
+        }
+    }
 }
 
 fn get_instructions(input : &String) -> Vec<Instruction> {
@@ -49,92 +72,99 @@ fn get_instructions(input : &String) -> Vec<Instruction> {
 
 fn part1(input : &Vec<Instruction>) -> i32 {
     let mut processed_instructions: HashSet<usize> = HashSet::new();
-    let mut acc = 0;
-    let mut current_instruction = 0;
+    let mut state = State { current_instruction: 0, acc: 0 };
     let mut terminate = false;
 
     while terminate == false {
-        processed_instructions.insert(current_instruction);
-        match input[current_instruction].instruction_type {
-            InstructionType::Nop => {
-                current_instruction = current_instruction + 1;
-            },
-            InstructionType::Acc => {
-                acc = acc + input[current_instruction].value;
-                current_instruction = current_instruction + 1;
-            },
-            InstructionType::Jmp => {
-                current_instruction = ((current_instruction as i32) + input[current_instruction].value) as usize;
-            },
-        }
-        if processed_instructions.contains(&current_instruction) {
+        processed_instructions.insert(state.current_instruction);
+        state.action_instruction(input[state.current_instruction]);
+        dbg!(state);
+        dbg!(&state.current_instruction);
+        if processed_instructions.contains(&state.current_instruction) {
             terminate = true;
+            dbg!(terminate);
         }
     }
-    acc
+    state.acc
 }
 
-fn part2(input : &Vec<Instruction>) -> i32 {
-    let mut processed_instructions: HashSet<usize>;
-    let mut acc = 0;
-    let mut current_instruction : usize = 0;
-    let mut terminate : bool;
-    let correct_end = input.len();
-    let mut modified_instruction_count = 0;
-    let mut current_modifiable_instruction_count;
-    let mut loop_modified;
+// fn part2(input : &Vec<Instruction>) -> i32 {
+//     let mut processed_instructions: HashSet<usize>;
+//     let mut state = State { current_instruction: 0, acc: 0 };
+//     let mut acc = 0;
+//     let mut current_instruction : usize = 0;
+//     let mut terminate : bool;
+//     let correct_end = input.len();
+//     let mut modified_instruction_count = 0;
+//     let mut current_modifiable_instruction_count;
+//     let mut loop_modified;
 
-    while !(&current_instruction == &correct_end) {
-        acc = 0;
-        current_instruction = 0;
-        terminate = false;
-        current_modifiable_instruction_count = 0;
-        processed_instructions = HashSet::new();
-        loop_modified = false;
-        while terminate == false {
-            processed_instructions.insert(current_instruction);
-            match input[current_instruction].instruction_type {
-                InstructionType::Nop => {
-                    current_modifiable_instruction_count = current_modifiable_instruction_count + 1;
-                    if current_modifiable_instruction_count == (modified_instruction_count  + 1) && loop_modified == false {
-                        current_instruction = ((current_instruction as i32) + input[current_instruction].value) as usize;
-                        modified_instruction_count = modified_instruction_count + 1;
-                        loop_modified = true;
-                    } else {
-                        current_instruction = current_instruction + 1;
-                    }
-                },
-                InstructionType::Acc => {
-                    acc = acc + input[current_instruction].value;
-                    current_instruction = current_instruction + 1;
-                },
-                InstructionType::Jmp => {
-                    current_modifiable_instruction_count = current_modifiable_instruction_count + 1;
-                    if current_modifiable_instruction_count == (modified_instruction_count  + 1) && loop_modified == false {
-                        current_instruction = current_instruction + 1;
-                        modified_instruction_count = modified_instruction_count + 1;
-                        loop_modified = true;
-                    } else {
-                        current_instruction = ((current_instruction as i32) + input[current_instruction].value) as usize;
-                    }  
-                },
-            }
-            if processed_instructions.contains(&current_instruction) || &current_instruction == &correct_end {
-                terminate = true;
-            }
-        }
-    }
-    acc
-}
+//     while !(&current_instruction == &correct_end) {
+//         state = State { current_instruction: 0, acc: 0 };
+//         terminate = false;
+//         current_modifiable_instruction_count = 0;
+//         processed_instructions = HashSet::new();
+//         loop_modified = false;
+//         while terminate == false {
+//             processed_instructions.insert(current_instruction);
+//             match input[current_instruction].instruction_type {
+//                 InstructionType::Nop => {
+//                     current_modifiable_instruction_count = current_modifiable_instruction_count + 1;
+//                     if current_modifiable_instruction_count == (modified_instruction_count  + 1) && loop_modified == false {
+//                         current_instruction = ((current_instruction as i32) + input[current_instruction].value) as usize;
+//                         modified_instruction_count = modified_instruction_count + 1;
+//                         loop_modified = true;
+//                     } else {
+//                         current_instruction = current_instruction + 1;
+//                     }
+//                 },
+//                 InstructionType::Acc => {
+//                     acc = acc + input[current_instruction].value;
+//                     current_instruction = current_instruction + 1;
+//                 },
+//                 InstructionType::Jmp => {
+//                     current_modifiable_instruction_count = current_modifiable_instruction_count + 1;
+//                     if current_modifiable_instruction_count == (modified_instruction_count  + 1) && loop_modified == false {
+//                         current_instruction = current_instruction + 1;
+//                         modified_instruction_count = modified_instruction_count + 1;
+//                         loop_modified = true;
+//                     } else {
+//                         current_instruction = ((current_instruction as i32) + input[current_instruction].value) as usize;
+//                     }  
+//                 },
+//             }
+//             if processed_instructions.contains(&current_instruction) || &current_instruction == &correct_end {
+//                 terminate = true;
+//             }
+//         }
+//     }
+//     acc
+// }
 
-#[cfg(test)]
-mod part2_tests {
-    use super::*;
-    #[test]
-    fn part_1() {
-        let input = "nop +0\nacc +1\njmp +4\nacc +3\njmp -3\nacc -99\nacc +1\njmp -4\nacc +6".to_string();  
-        let instructions = get_instructions(&input);
-        assert_eq!(part2(&instructions), 8);
-    }
-}
+// fn action_instruction (instruction_type : InstructionType, state : State) {
+//     match instruction_type {
+//         InstructionType::Nop => {
+//             state.current_instruction = current_instruction + 1;
+//         },
+//         InstructionType::Acc => {
+//             acc = acc + input[current_instruction].value;
+//             current_instruction = current_instruction + 1;
+//         },
+//         InstructionType::Jmp => {
+//             current_instruction = ((current_instruction as i32) + input[current_instruction].value) as usize;
+//         },
+//     }
+//     state
+// }
+
+// #[cfg(test)]
+// mod part2_tests {
+//     use super::*;
+//     #[test]
+//     fn part_1() {
+//         let input = "nop +0\nacc +1\njmp +4\nacc +3\njmp -3\nacc -99\nacc +1\njmp -4\nacc +6".to_string();  
+//         let instructions = get_instructions(&input);
+//         assert_eq!(part2(&instructions), 8);
+//     }
+// }
 
