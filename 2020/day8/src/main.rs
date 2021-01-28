@@ -8,7 +8,7 @@ fn main() {
     println!("Part 2 = {}", part2(&instructions));
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 enum InstructionType {
     Nop,
     Acc,
@@ -19,6 +19,20 @@ enum InstructionType {
 struct Instruction {
     instruction_type: InstructionType,
     value: i32,
+}
+
+impl Instruction {
+    fn flip_instruction(&mut self) {
+        match self.instruction_type {
+            InstructionType::Nop => {
+                self.instruction_type = InstructionType::Jmp;
+            },
+            InstructionType::Jmp => {
+                self.instruction_type = InstructionType::Nop;
+            },
+            _ => {}
+        }
+    }
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -103,24 +117,14 @@ fn part2(input : &Vec<Instruction>) -> i32 {
         while terminate == false {
             processed_instructions.insert(state.current_instruction);
             let mut instruction = input[state.current_instruction];
-            match instruction.instruction_type {
-                InstructionType::Nop => {
-                    current_modifiable_instruction_count = current_modifiable_instruction_count + 1;
-                    if current_modifiable_instruction_count == (modified_instruction_count  + 1) && loop_modified == false {
-                        instruction.instruction_type = InstructionType::Jmp;
-                        modified_instruction_count = modified_instruction_count + 1;
-                        loop_modified = true;
-                    }
-                },
-                InstructionType::Jmp => {
-                    current_modifiable_instruction_count = current_modifiable_instruction_count + 1;
-                    if current_modifiable_instruction_count == (modified_instruction_count  + 1) && loop_modified == false {
-                        instruction.instruction_type = InstructionType::Nop;
-                        modified_instruction_count = modified_instruction_count + 1;
-                        loop_modified = true;
-                    }
-                },
-                _ => {}
+
+            if instruction.instruction_type == InstructionType::Nop || instruction.instruction_type == InstructionType::Jmp {
+                current_modifiable_instruction_count = current_modifiable_instruction_count + 1;
+                if current_modifiable_instruction_count == (modified_instruction_count  + 1) && loop_modified == false {
+                    instruction.flip_instruction();
+                    modified_instruction_count = modified_instruction_count + 1;
+                    loop_modified = true;
+                }
             }
             state.action_instruction(instruction);
             if processed_instructions.contains(&state.current_instruction) || &state.current_instruction == &correct_end {
